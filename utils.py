@@ -1,3 +1,4 @@
+from telegram import ReplyKeyboardMarkup, KeyboardButton
 import requests
 import settings
 
@@ -35,3 +36,12 @@ class WeatherInfoOpenWeatherMap:
 
         self._weather_info_separates(weather_info.json())
         return True
+
+
+def user_keyboard() -> ReplyKeyboardMarkup:
+    keyboard = [
+        ['/start'],
+        ['/planet', '/weather'],
+        [KeyboardButton('Мои координаты', request_location=True)]
+    ]
+    return ReplyKeyboardMarkup(keyboard)
