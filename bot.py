@@ -1,7 +1,7 @@
 import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-from handlers import greet_user, weather, planet, talk_to_me, user_coordinates, wordcount
+from handlers import greet_user, weather, planet, talk_to_me, user_coordinates, wordcount, next_full_moon, city_game
 import settings
 
 
@@ -11,11 +11,14 @@ def main():
     dp = bot.dispatcher
 
     dp.add_handler(CommandHandler('start', greet_user))
-    dp.add_handler(CommandHandler('weather', weather))
-    dp.add_handler(CommandHandler('planet', planet))
     dp.add_handler(CommandHandler('wordcount', wordcount))
+    dp.add_handler(CommandHandler('planet', planet))
+    dp.add_handler(CommandHandler('next_full_moon', next_full_moon))
 
     dp.add_handler(MessageHandler(Filters.regex('^(test)$'), talk_to_me))
+    dp.add_handler(MessageHandler(Filters.regex('^[Пп]огода'), weather))
+    dp.add_handler(MessageHandler(Filters.regex('^[Гг]ород'), city_game))
+
     dp.add_handler(MessageHandler(Filters.location, user_coordinates))
 
     logging.info('Bot starting')

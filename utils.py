@@ -1,6 +1,17 @@
+import datetime
+from collections import defaultdict
 from telegram import ReplyKeyboardMarkup, KeyboardButton
 import requests
 import settings
+
+
+def user_keyboard() -> ReplyKeyboardMarkup:
+    keyboard = [
+        ['/start'],
+        ['/planet', '/weather', '/wordcount'],
+        [KeyboardButton('Мои координаты', request_location=True)]
+    ]
+    return ReplyKeyboardMarkup(keyboard)
 
 
 class WeatherInfoOpenWeatherMap:
@@ -38,10 +49,44 @@ class WeatherInfoOpenWeatherMap:
         return True
 
 
-def user_keyboard() -> ReplyKeyboardMarkup:
-    keyboard = [
-        ['/start'],
-        ['/planet', '/weather', '/wordcount'],
-        [KeyboardButton('Мои координаты', request_location=True)]
-    ]
-    return ReplyKeyboardMarkup(keyboard)
+class CityGame:
+
+    def __init__(self):
+        self.score = 0
+        self.last_char = None
+        self.__city_list = defaultdict(set)
+
+    def _create_city_list(self):
+        with open('cities.db', 'r', encoding='utf-8') as file:
+            for line in file:
+                city = line.strip().lower()
+                self.__city_list[city[0]].add(city)
+
+    def start_new_game(self):
+        self.score = 0
+        self._create_city_list()
+
+    def check_city(self, name: str) -> bool:
+        try:
+            self.__city_list[name[0]].remove(name)
+            self.score += 1
+            return True
+        except KeyError:
+            return False
+
+    def get_city(self, last_char):
+        try:
+            new_city = self.__city_list[last_char].pop()
+        except KeyError:
+            return None
+        self.last_char = new_city[-1].lower()
+        return new_city.capitalize()
+
+
+if __name__ == '__main__':
+    game = CityGame()
+    game.start_new_game()
+    print(game.__city_list)
+    for i in range(35):
+        print(game.get_city("ю"))
+
