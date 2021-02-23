@@ -41,7 +41,7 @@ class WeatherInfoOpenWeatherMap:
 def user_keyboard() -> ReplyKeyboardMarkup:
     keyboard = [
         ['/start'],
-        ['/planet', '/weather'],
+        ['/planet', '/weather', '/wordcount'],
         [KeyboardButton('Мои координаты', request_location=True)]
     ]
     return ReplyKeyboardMarkup(keyboard)

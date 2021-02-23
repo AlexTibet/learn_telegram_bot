@@ -19,6 +19,10 @@ def user_coordinates(update, context):
     coordinates = update.message.location
 
 
+def wordcount(update, context):
+    update.message.reply_text(f"`{len(context.args)}`", parse_mode="Markdown", reply_markup=user_keyboard())
+
+
 def planet(update, context):
     planet_list = ['Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Sun', 'Moon']
     answer = f"Попробуйте написать /planet _Название-планеты_\n`Известные мне планеты: {', '.join(planet_list)}.`"

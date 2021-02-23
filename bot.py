@@ -1,7 +1,7 @@
 import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-from handlers import greet_user, weather, planet, talk_to_me, user_coordinates
+from handlers import greet_user, weather, planet, talk_to_me, user_coordinates, wordcount
 import settings
 
 
@@ -13,6 +13,7 @@ def main():
     dp.add_handler(CommandHandler('start', greet_user))
     dp.add_handler(CommandHandler('weather', weather))
     dp.add_handler(CommandHandler('planet', planet))
+    dp.add_handler(CommandHandler('wordcount', wordcount))
 
     dp.add_handler(MessageHandler(Filters.regex('^(test)$'), talk_to_me))
     dp.add_handler(MessageHandler(Filters.location, user_coordinates))
