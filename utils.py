@@ -1,5 +1,6 @@
 import datetime
 from collections import defaultdict
+import logging
 from telegram import ReplyKeyboardMarkup, KeyboardButton
 import requests
 import settings
@@ -36,17 +37,20 @@ class WeatherInfoOpenWeatherMap:
         self.icon_url = f"http://openweathermap.org/img/wn/{description_and_icon['icon']}@2x.png"
 
     def search(self) -> bool:
-        weather_info = requests.get(
-            f'http://api.openweathermap.org/data/2.5/weather?'
-            f'q={self._city_name}'
-            f'&appid={self._api_key}&lang=ru&units=metric'
-        )
+        weather_url = "http://api.openweathermap.org/data/2.5/weather"
+        params = {
+            "q": self._city_name,
+            "appid": self._api_key
+        }
 
-        if weather_info.status_code != requests.codes.ok:
+        try:
+            weather_info = requests.get(weather_url, params=params)
+            weather_info.raise_for_status()
+            self._weather_info_separates(weather_info.json())
+            return True
+        except (requests.RequestException, ValueError):
+            logging.info("Connection error")
             return False
-
-        self._weather_info_separates(weather_info.json())
-        return True
 
 
 class CityGame:
